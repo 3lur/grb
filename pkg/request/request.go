@@ -1,8 +1,9 @@
-package utils
+package request
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/thedevsaddam/govalidator"
+	"github.com/zwhypls/grb/pkg/response"
 )
 
 type validateFunc func(interface{}, *gin.Context) map[string]string
@@ -19,14 +20,14 @@ func validate(data interface{}, rules, messages govalidator.MapData) map[string]
 
 func Validate(c *gin.Context, obj interface{}, handler validateFunc) bool {
 	if err := c.ShouldBindJSON(obj); err != nil {
-		// todo
+		response.BadRequest(c, err, "请求解析错误，请确认请求格式是否正确")
 		return false
 	}
 
 	errs := handler(obj, c)
 
 	if len(errs) > 0 {
-		// todo
+		response.ValidationError(c, errs)
 		return false
 	}
 	return true
