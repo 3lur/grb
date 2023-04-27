@@ -1,13 +1,13 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/zwhypls/grb/api/v1/auth"
+)
 
 func main() {
 	r := gin.New()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // 监听并在 0.0.0.0:8080 上启动服务
+	mc := new(auth.Manager)
+	r.POST("/login", mc.SignIn)
+	r.Run()
 }
